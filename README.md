@@ -49,7 +49,7 @@ For ones who would like to have a try with less concern about model accuracy, se
 
 We tried with 1x images but the model did not improve at 100 or longer epochs.
 Validation accuracy reached about 0.650.
-(Model chosen - Resnet50, size : 5500 x 5500, Resize factor: 0.1 - meaning the magnification is 1x)
+(Model chosen - Resnet50, size : 5500 x 5500, Resize factor: 0.05 - meaning the magnification is 1x)
 
 ![image](https://user-images.githubusercontent.com/64822593/198201896-d21ad7b2-3bc9-43ee-aa6d-b27176612b23.png)
 
