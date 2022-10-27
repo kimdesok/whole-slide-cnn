@@ -32,6 +32,11 @@ Validation results (*n* = 192) on `data_configs/pure_tcga/val_pure_tcga.csv` are
 
 <img src="https://user-images.githubusercontent.com/6285919/122541978-cd029800-d05c-11eb-932c-3cc0c517101e.png" width="400" />
 
+### Error occurred when the pretrained model was loaded.
+
+The number of the layers of the provided model was different to the Resnet 50 or Resnet 32. <br>
+Thus, it is NOT compatible with any models that can be selected in model.py.
+
 
 ## Requirements
 
@@ -39,6 +44,15 @@ Validation results (*n* = 192) on `data_configs/pure_tcga/val_pure_tcga.csv` are
 
 Make sure the system contains adequate amount of main memory space (minimal: 256 GB, recommended: 512 GB) to prevent out-of-memory error.
 For ones who would like to have a try with less concern about model accuracy, setting a lower resizing ratio and image size in configuration can drastically reduce memory consumption, friendly for limited computing resources.
+
+### Problem encountered when the hardware requirement was not met
+
+We tried with 1x images but the model did not improve at 100 or longer epochs.
+Validation accuracy reached about 0.650.
+(Model chosen - Resnet50, size : 5500 x 5500, Resize factor: 0.1 - meaning the magnification is 1x)
+
+![image](https://user-images.githubusercontent.com/64822593/198201896-d21ad7b2-3bc9-43ee-aa6d-b27176612b23.png)
+
 
 ### Packages
 
