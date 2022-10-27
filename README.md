@@ -57,6 +57,12 @@ Validation accuracy reached about 0.650.
 ### Packages
 
 The codes are tested on the environment with Ubuntu 18.04 / CentOS 7.5, Python 3.7.3, cuda 10.0, cudnn 7.6 and Open MPI 4.0.1.
+
+Note) Install a set of CUDA related stuffs compatible with tensorflow version 1.15.
+
+$conda install cudatoolkit=10.0
+$conda install cudnn=7.6.5
+
 Some Python packages should be installed before running the scripts, including
 
 - Tensorflow v1.x (tensorflow-gpu==1.15.3)
@@ -64,10 +70,13 @@ Some Python packages should be installed before running the scripts, including
 - MPI for Python (mpi4py==3.0.3)
 - OpenSlide 3.4.1 (https://github.com/openslide/openslide/releases/tag/v3.4.1)
 - OpenSlide Python (openslide-python=1.1.1)
-- Tensorflow Huge Model Support (our package)
 - (optional) R 4.0.2 (https://www.r-project.org/)
+- Tensorflow Huge Model Support (our package)
 
-Refer to requirements.txt for the full list.
+Note) The above packages are installed under the folder tensorflow-huge-model-support.
+$pip install .
+
+Refer to poetry.lock under whole_slide_cnn folder for the full list.
 The installation of these packages should take few minutes.
 
 ## Usage
