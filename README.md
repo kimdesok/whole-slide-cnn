@@ -60,8 +60,9 @@ The codes are tested on the environment with Ubuntu 18.04 / CentOS 7.5, Python 3
 
 Note) Install a set of CUDA related stuffs compatible with tensorflow version 1.15.
 
-$conda install cudatoolkit=10.0
-$conda install cudnn=7.6.5
+> $conda install cudatoolkit=10.0
+
+> $conda install cudnn=7.6.5
 
 Some Python packages should be installed before running the scripts, including
 
@@ -73,8 +74,9 @@ Some Python packages should be installed before running the scripts, including
 - (optional) R 4.0.2 (https://www.r-project.org/)
 - Tensorflow Huge Model Support (our package)
 
-Note) The above packages are installed under the folder tensorflow-huge-model-support.
-$pip install .
+Note) The above packages are installed under the folder tensorflow-huge-model-support. 
+
+> $pip install .
 
 Refer to poetry.lock under whole_slide_cnn folder for the full list.
 The installation of these packages should take few minutes.
@@ -119,7 +121,7 @@ The following table describes each field in a train_config.
 | SLIDE_READER               | Library to read slides. (default: `openslide`)
 | RESIZE_RATIO               | Resize ratio for downsampling slide images.
 | INPUT_SIZE                 | Size of model inputs in [height, width, channels]. Resized images are padded or cropped to the size. Try decreasing this field when main memory are limited.
-| MODEL                      | Model architecture to use. One of `fixup_resnet50`, `fixup_resnet34` and `resnet34`.
+| MODEL                      | Model architecture to use. One of `fixup_resnet50`, `fixup_resnet34`, `resnet34`, and `frozenbn_resnet50`.
 | NUM_CLASSES                | Number of classes.
 | BATCH_SIZE                 | Number of slides processed in each training iteration for each MPI worker. (default: 1)
 | EPOCHS                     | Maximal number of training epochs.
@@ -169,6 +171,66 @@ mpirun -np 4 -x CUDA_VISIBLE_DEVICES="0,1,2,3" python -m whole_slide_cnn.train -
 Note that you should `cd` to the root folder of this repo before calling the above commands.
 
 Typically, this step takes days to complete, depending on the computing power, while you can trace the progress in real time from program output.
+
+### Backbones of the model (Note)
+
+In model.py, a dictionary variable called graph_mapping is defined as below.  One of noticeable things is that fixup_resnet50 and frozenbn_resnet50 taking up the weights of the imagenet as initial weights.  The other two are not so their weights are initiated randomly.  
+
+graph_mapping = {
+
+    "resnet34": lambda *args, **kwargs: ResNet34(
+        *args, 
+        norm_use="bn", 
+        weights=None,
+        use_fixup=False,
+        data_format="channels_last",
+        **kwargs
+    ),
+    
+    "fixup_resnet34": lambda *args, **kwargs: ResNet34(
+        *args, 
+        norm_use="", 
+        weights=None,
+        use_fixup=True,
+        data_format="channels_last",
+        **kwargs
+    ),
+    
+    "fixup_resnet50": lambda *args, **kwargs: ResNet50(
+        *args, 
+        norm_use="", 
+        weights="imagenet",
+        use_fixup=True, 
+        data_format="channels_last",
+        **kwargs
+    ),
+    
+    "frozenbn_resnet50": lambda *args, **kwargs: ResNet50(
+        *args,
+        norm_use="frozen_bn",
+        weights="imagenet",
+        use_fixup=False,
+        data_format="channels_last",
+        to_caffe_preproc=True,
+        **kwargs
+    ),
+    
+The use of arguments such as norm_use, use_fixup, and to_caffe_preproc seems to be referred by the authors to:
+
+> Reference papers
+
+- [Deep Residual Learning for Image Recognition]
+  (https://arxiv.org/abs/1512.03385) (CVPR 2016)
+  
+- [Fixup Initialization: Residual Learning Without Normalization]
+  (https://arxiv.org/abs/1901.09321) (ICLR 2019)
+
+> Reference implementations
+
+- [ResNet]
+  (https://github.com/keras-team/keras-applications/blob/master/keras_applications/resnet_common.py)
+
+
 
 ### 4. (Optional) Post-train Patch Aggregation Model for MIL
 
