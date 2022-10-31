@@ -267,3 +267,12 @@ The slide data from TMUH, WFH and SHH are not publicly available due to patient 
 The slide data supporting the cross-site generalization capability in this study are obtained from TCGA via the Genomic Data Commons Data Portal (https://gdc.cancer.gov).
 
 A dataset consists of several slides from TCGA-LUAD and TCGA-LUSC is suitable for testing our pipeline in small scale, with some proper modifications of configuration files described above.
+
+## Results
+A Resnet 50 model was trained with the initial weights given by Imagenet.  The loss and accuracy curves were generated upon training the model through 100 epochs.
+
+![image](https://user-images.githubusercontent.com/64822593/198936803-2a2fb8d3-d3b2-4009-b9d9-e54b24d96e79.png)
+
+The model was evaluated visually by grad-CAM that depicts the likelihood of the class on the histologic image.  The image below highlights where the lung cancer cells are likely located (LUAD class).  
+![image](https://user-images.githubusercontent.com/64822593/198936059-14cde1f4-780f-4cf1-98e3-2f86b86ac73c.png)
+
