@@ -273,6 +273,6 @@ A Resnet 50 model was trained with the initial weights given by Imagenet.  The l
 
 ![image](https://user-images.githubusercontent.com/64822593/198936803-2a2fb8d3-d3b2-4009-b9d9-e54b24d96e79.png)
 
-The model was evaluated visually by grad-CAM that depicts the likelihood of the class on the histologic image.  The image below highlights where the lung cancer cells are likely located (LUAD class).  
-![image](https://user-images.githubusercontent.com/64822593/198936059-14cde1f4-780f-4cf1-98e3-2f86b86ac73c.png)
+The model was evaluated visually by grad-CAM that depicts the likelihood of the tumor in the tissue. The image below highlights where the lung cancer cells are likely located (LUAD class).  The middle image was generated using the ResNet50 model trained from the weights of Imagenet and shows somewhat large tissue area of false positive.  The right image was generated using the Resnet model trained in a continous mode after loading the previously trained model (at 4x) and shows much tighter marking of the tumor tissue.  
+![TCGA-49-4494-01Z-00-DX5 1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f svs](https://user-images.githubusercontent.com/64822593/199023104-e39cd3af-4445-4ee2-86fa-cf4700b08b52.png)
 
