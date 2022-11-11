@@ -45,15 +45,6 @@ Thus, it is NOT compatible with any models that can be selected in model.py.
 Make sure the system contains adequate amount of main memory space (minimal: 256 GB, recommended: 512 GB) to prevent out-of-memory error.
 For ones who would like to have a try with less concern about model accuracy, setting a lower resizing ratio and image size in configuration can drastically reduce memory consumption, friendly for limited computing resources.
 
-### Problem encountered when the hardware requirement was not met
-
-We tried with 1x images but the model did not improve at 100 or longer epochs.
-Validation accuracy reached about 0.650.
-(Model chosen - Resnet50, size : 5500 x 5500, Resize factor: 0.05 - meaning the magnification is 1x)
-
-![image](https://user-images.githubusercontent.com/64822593/198201896-d21ad7b2-3bc9-43ee-aa6d-b27176612b23.png)
-
-
 ### Packages
 
 The codes are tested on the environment with Ubuntu 18.04 / CentOS 7.5, Python 3.7.3, cuda 10.0, cudnn 7.6 and Open MPI 4.0.1.
@@ -269,9 +260,18 @@ The slide data supporting the cross-site generalization capability in this study
 A dataset consists of several slides from TCGA-LUAD and TCGA-LUSC is suitable for testing our pipeline in small scale, with some proper modifications of configuration files described above.
 
 ## Results
-A Resnet 50 model was trained with the initial weights given by Imagenet.  The loss and accuracy curves were generated upon training the model through 100 epochs.
+
+### Problem encountered when the hardware requirement was not met
+
+We tried the training the Resnet50, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the Resize factor of 0.05, representing the magnification at 1x.
+
+The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.80 with the validation loss of 0.41.
 
 ![image](https://user-images.githubusercontent.com/64822593/198936803-2a2fb8d3-d3b2-4009-b9d9-e54b24d96e79.png)
+
+To improve the accuracy, we tried the training with 2x images upon loading the model.h5 provided by the authors.  Although it was trained at 4x but utilized for our training at 2x.  The validation accuracy reached about 0.89 with the validation loss of 0.25 within 100 epochs, that was significantly increased from the initial training at 1x.  Out hardware spec. remained the same as for the 1x training (CPU RAM : 128 GB).
+
+![image](https://user-images.githubusercontent.com/64822593/201279646-b3c4170d-2cc1-4f87-b32d-6486e306f473.png)
 
 The model was evaluated visually by grad-CAM that depicts the likelihood of the tumor in the tissue. The image below highlights where the lung cancer cells are likely located (LUAD class).  The middle image was generated using the ResNet50 model trained from the weights of Imagenet and shows somewhat large tissue area of false positive.  The right image was generated using the Resnet model trained in a continous mode after loading the previously trained model (at 4x) and shows much tighter marking of the tumor tissue.  
 ![TCGA-49-4494-01Z-00-DX5 1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f svs](https://user-images.githubusercontent.com/64822593/199023104-e39cd3af-4445-4ee2-86fa-cf4700b08b52.png)
