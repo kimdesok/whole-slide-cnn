@@ -259,13 +259,14 @@ The slide data supporting the cross-site generalization capability in this study
 
 A dataset consists of several slides from TCGA-LUAD and TCGA-LUSC is suitable for testing our pipeline in small scale, with some proper modifications of configuration files described above.
 
-## Results
+## Results (Draft)
 
-### Problem encountered when the hardware requirement was not met
+### Performance of Resnet 34 and Resnet 50 with the WSI at 1x and 2x magnification
+We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the Resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.
+![image](https://user-images.githubusercontent.com/64822593/201547097-89a4b7f7-9218-4250-964d-1f564bb60266.png)
 
-We tried the training the Resnet50, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the Resize factor of 0.05, representing the magnification at 1x.
 
-The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.80 with the validation loss of 0.41.
+We then tried the training with the Resnet50, initialized by the weights obtained by training with Imagenet, at the same magnification. The validation accuracy reached about 0.80 with the validation loss of 0.41.
 
 ![image](https://user-images.githubusercontent.com/64822593/198936803-2a2fb8d3-d3b2-4009-b9d9-e54b24d96e79.png)
 
@@ -273,6 +274,25 @@ To improve the accuracy, we tried the training with 2x images upon loading the m
 
 ![image](https://user-images.githubusercontent.com/64822593/201279646-b3c4170d-2cc1-4f87-b32d-6486e306f473.png)
 
-The model was evaluated visually by grad-CAM that depicts the likelihood of the tumor in the tissue. The image below highlights where the lung cancer cells are likely located (LUAD class).  The middle image was generated using the ResNet50 model trained from the weights of Imagenet and shows somewhat large tissue area of false positive.  The right image was generated using the Resnet model trained in a continous mode after loading the previously trained model (at 4x) and shows much tighter marking of the tumor tissue.  
-![TCGA-49-4494-01Z-00-DX5 1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f svs](https://user-images.githubusercontent.com/64822593/199023104-e39cd3af-4445-4ee2-86fa-cf4700b08b52.png)
+### Visualization of grad-CAM
+The model was evaluated visually by grad-CAM that depicts the likelihood of the tumor in the tissue(panel A in the figure). The image below highlights where the lung cancer cells are likely located in an LUAD case.  
 
+The second image was generated using the ResNet50 model trained at the 1x magnification from the weights of Imagenet and shows somewhat large tissue area of false positive(panel B).  
+
+The third image was generated using the Resnet model trained at the same magnification in a continous mode after loading the previously trained model (at 4x) and seem to show much tighter marking of the tumor tissue(panel C).  
+
+Finally, the fourth image was generated using the Resnet model trained at the 2x in the continous mode and seems to show much larger marking area of the tumor tissue(panel D).  At the moment, the marking has not been validated by an expert.
+![image](https://user-images.githubusercontent.com/64822593/201546476-51062b10-2bd1-4e96-a929-65078ae32f0b.png)
+
+### Problems encountered when the hardware requirement was not met
+The computing server consisted of NVIDIA Quadro RTX 6000 GPU that had 24 GB memory capable of runnning at 10TFPs.  The CPU memory was 128 GB.  
+
+Due to the memory requirement of the algorithm, only images at the magnification at the 2x were suitable for the training at the server.  Thus, higher resolution images at 5x or above could not be used for the training. 
+
+When the magnification of the input images was 1x, the accuracy values were 0.68 and 0.80 for Resnet 34 and Resnet 50, respectively.  When the magnification was increased to 2x, the accuracy was increased to 0.89 in Resnet 50.  This suggested that the higher resolution of the input images helped to improve the performance. However, we could not improve the accuracy further due to the limitation of the memory in the server for the 4x images.
+
+### Computing time
+The computing time at the 1x was about 4.3 sec per batch and the batch was set to 80.  Total computing time was 115 mins when the number of the total batch for the training of ResNet50 was 1,600.  The computing time at the 2x was about 46 sec per batch.  Total computing time was about 102 hours when the number of the batch to process was 8,000.
+
+## Acknowledgement
+The computing server was kindly provided by the National Internet Promotion Agency(NIPA) of south Korea.
