@@ -1,10 +1,14 @@
 # Whole slide image (WSI) training CNN Pipeline
 
 ### Short Introduction
-The WSI is the digital image representing the entire histologic slide captured by a high-throughput scanner such as Leica's Aperio scanner.  The pixel size of a WSI is often larger than 100,000 by 100,000 reaching upto 10 GB. Each individual WSI can be easily labeled according to the corresponding clinical information readily available at the deposit site such as the NCI's GDC data portal, for example. 
+The WSI is the digital image representing the entire histologic slide captured by a high-throughput scanner such as Leica's Aperio scanner.  The pixel size of a WSI is often larger than 100,000 by 100,000 reaching upto 10 GB. Each individual WSI can be easily labeled by using the corresponding clinical information readily available at the deposit site such as the NCI's GDC data portal, for example.
+
 It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high accuracy, the WSI input should be provided at least 5x or even higher, resulting in the requirement of an adequately large memory close to 512 GB, for example.
 
-![image](https://user-images.githubusercontent.com/64822593/208769480-c5ae3159-e11d-4533-ad2a-6eef968b2ba3.png)
+![image](https://user-images.githubusercontent.com/64822593/208895067-51db8300-c49d-489a-b19a-d90a16bfc849.png)
+<p align="center">
+WSI is a tiled TIFF.  Captured from TCGA-49-4494-01Z-00-DX5.1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f.svs
+</p> 
 
 The computing resource made of multi GPUs often lacks this much memory and ends up with the out of memory(OOM) error.  To solve this problem, IBM developed Large Model Support(LMS) that takes a user-defined computational graph and swaps tensors from GPUs to the host memory and vice versa [For more, see (https://www.ibm.com/docs/en/wmlce/1.6.0?topic=gsmf-getting-started-tensorflow-large-model-support-tflms-v2)].  
 
