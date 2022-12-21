@@ -20,7 +20,7 @@ The pipeline should be adaptable to other pathological cases such as prostate ca
 
 The computing resource should provide an adequate amount of main memory space (minimal: 256 GB, recommended: 512 GB) to prevent out-of-memory(OOM) error.  
 
-A trial training was performed by setting the resizing ratio at 0.05 and the size of an input image to 5000 x 5000 (and 0.1 and 11000 x 11000) in the configuration file, for example.  However, it resulted in the lower accuracy values ranging from 80 to 90%.
+A trial training could be performed by setting the resizing ratio at 0.05 and the size of an input image to 5000 x 5000 (and 0.1 and 11000 x 11000) in the configuration file, for example.  However, it would result in the lower accuracy values ranging from 80 to 90%.
 
 ### Packages
 
@@ -54,8 +54,8 @@ The .csv files under data_configs folder were used as they were without any modi
 In the YAML file, the parameters of RESIZE_RATIO and INPUT_SIZE were set appropriately to avoid the OOM error.  One example is shown below:
 ```
 RESIZE_RATIO: 0.05
-
 INPUT_SIZE: [5000, 5000, 3]
+NUM_UPDATES_PER_EPOCH: 80
 ```
 ### 2. Train a Model
 
