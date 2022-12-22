@@ -3,18 +3,18 @@
 ### Short Introduction
 The WSI is the digital image representing the entire histologic slide captured by a high-throughput scanner such as Leica's Aperio scanner.  The pixel size of a WSI is often larger than 100,000 by 100,000 reaching upto 10 GB. Each individual WSI can be easily labeled by using the corresponding clinical information readily available at the deposit site such as the NCI's GDC data portal, for example.
 
-It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high accuracy, the WSI input should be provided at least 5x or even higher, resulting in the requirement of an adequately large memory close to 512 GB, for example.
+It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high accuracy, the WSI input should be provided at least 5x or even higher, requiring a computing resource with an adequately large memory close to 512 GB, for example.
 
 ![image](https://user-images.githubusercontent.com/64822593/208895067-51db8300-c49d-489a-b19a-d90a16bfc849.png)
 <p align="center">
-WSI is a tiled TIFF.  Captured from TCGA-49-4494-01Z-00-DX5.1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f.svs
+Whole Slide Image(WSI) is a tiled TIFF.  Captured from TCGA-49-4494-01Z-00-DX5.1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f.svs
 </p> 
 
-The computing resource made of multi GPUs often lacks this much memory and ends up with the out of memory(OOM) error.  To solve this problem, IBM developed Large Model Support(LMS) that takes a user-defined computational graph and swaps tensors from GPUs to the host memory and vice versa [For more, see (https://www.ibm.com/docs/en/wmlce/1.6.0?topic=gsmf-getting-started-tensorflow-large-model-support-tflms-v2)].  
+The computing resource even with multiple GPUs often lacks this much memory and ends up with the out of memory(OOM) error.  To solve this problem, IBM developed Large Model Support(LMS) that takes a user-defined computational graph and swaps tensors from GPUs to the host memory and vice versa [For more, see (https://www.ibm.com/docs/en/wmlce/1.6.0?topic=gsmf-getting-started-tensorflow-large-model-support-tflms-v2)].  
 
-The authors who set up this depository originally had also developed a large model support similar to the IBM's LMS [1][2].  The scripts provided by the authors let us to reproduce the results in the paper [1], including model training, inference, visualization, and statistics calculation, etc.
+The authors who set up this depository originally had also developed a huge model support(HMS) function, probably similar to the IBM's LMS in a nutshell [1][2].  The scripts provided by the authors let us to reproduce their results by WSI input DL training, inference, visualization, and statistics calculation, etc[1].
 
-The pipeline should be adaptable to other pathological cases such as prostate cancers or breast cancers by creating new configuration files and simple label files additionally.
+The exactly same pipeline should be utilized to other human cancers such as prostate cancers or breast cancers by simply creating new configuration files (and label files in addition which is a piece of cake).
 
 ![image](https://user-images.githubusercontent.com/64822593/208655851-6986f3e5-84c0-46ab-9194-b35887bf83a0.png)
 
@@ -22,9 +22,9 @@ The pipeline should be adaptable to other pathological cases such as prostate ca
 
 ### Hardware Requirements
 
-The computing resource should provide an adequate amount of main memory space (minimal: 256 GB, recommended: 512 GB) to prevent out-of-memory(OOM) error.  
+The computing resource should provide an adequate amount of main memory space (minimal: 256 GB, recommended: 512 GB) to prevent out-of-memory(OOM) error and fully explore the utility of the huge memory support(HMS) function.  
 
-A trial training could be performed by setting the resizing ratio at 0.05 and the size of an input image to 5000 x 5000 (and 0.1 and 11000 x 11000) in the configuration file, for example.  However, it would result in the lower accuracy values ranging from 80 to 90%.
+However, a trial training could be performed by adjusting the resizing ratio at 0.05 and the size of an input image to 5000 x 5000, for example, in the configuration file(0.1 and 11000 x 11000 also worked for the server with 128 GB memory).  It would result in the lower accuracy values ranging from 80 to 90%.
 
 ### Packages
 
@@ -127,17 +127,19 @@ The computing server was kindly provided by the National Internet Promotion Agen
 
 ## References
 
-[1] Chen, CL., Chen, CC., Yu, WH. *et al.* An annotation-free whole-slide training approach to pathological classification of lung cancer types using deep learning. *Nat Commun* **12,** 1193 (2021). https://doi.org/10.1038/s41467-021-21467-y
+[1] Chi-Long Chen, Chi-Chung Chen, Wei-Hsiang Yu, Szu-Hua Chen, Yu-Chan Chang, Tai-I Hsu, Michael Hsiao, Chao-Yuan Yeh$ & Cheng-Yu Chen$  An annotation-free whole-slide training approach to pathological classification of lung cancer types using deep learning. *Nat Commun* **12,** 1193 (2021). https://doi.org/10.1038/s41467-021-21467-y
 
-[2] Chuang, WY., Chen, CC., Yu, WH. *et al.* Identification of nodal micrometastasis in colorectal cancer using deep learning on annotation-free whole-slide images. *Mod Pathol* (2021). https://doi.org/10.1038/s41379-021-00838-2
+[2] Wen-Yu Chuang, Chi-Chung Chen, Wei-Hsiang Yu, Chi-Ju Yeh, Shang-Hung Chang, Shir-Hwa Ueng, Tong-Hong Wang, Chuen Hsueh, Chang-Fu Kuo & Chao-Yuan Yeh$ Identification of nodal micrometastasis in colorectal cancer using deep learning on annotation-free whole-slide images. *Mod Pathol* (2021). https://doi.org/10.1038/s41379-021-00838-2
+
+## Appendix
+mostly taken from the original README.MD and 
+some more stuffs learning while trying this and that...
 
 ## License
 
 Copyright (C) 2021 aetherAI Co., Ltd.
 All rights reserved.
 Licensed under the CC BY-NC-SA 4.0 license (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode).
-
-## Appendix
 
 ### 1. Define Datasets
 
