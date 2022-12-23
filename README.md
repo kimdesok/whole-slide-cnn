@@ -222,6 +222,7 @@ See the following table for the usage of each tool.
 | tools/compare_auc.R   | Testing significance of the AUCs of two models. | tools/compare_auc.R RESULT_DIR_1/test_result.json RESULT_DIR_2/test_result.json
 | tools/draw_roc.py     | Draw the ROC diagram.                           | python tools/draw_roc.py test_result.json:MODEL_NAME:#FF0000
 | tools/gen_bootstrap_aucs.R | Generate 100 AUCs by bootstrapping.        | tools/gen_bootstrap_aucs.R RESULT_DIR/test_result.json
+| tools/print_scores.py | Print scores from test_result.json              | python tools/print_scores.py RESULT_DIR/test_result.json --column adeno (is_adeno, is_squamous, or squamous can be given)
 
 ### 4. Useful pre-trained Model
 
