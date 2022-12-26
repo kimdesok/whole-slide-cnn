@@ -67,6 +67,7 @@ The .csv files under data_configs folder were used without any modification. A d
     
 @2x training with the previously trained model
     LOAD_MODEL_BEFORE_TRAIN: True
+    MODEL: "frozenbn_resnet50"    
 ```
 ### 2. Train a Model
 
