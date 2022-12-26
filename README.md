@@ -58,7 +58,7 @@ The .csv files under data_configs folder were used as they were without any modi
 In the YAML file, the parameters of RESIZE_RATIO and INPUT_SIZE were set appropriately to avoid the OOM error.  One example is shown below:
 ```
 RESIZE_RATIO: 0.05
-INPUT_SIZE: [5000, 5000, 3]
+INPUT_SIZE: [5500, 5500, 3]
 NUM_UPDATES_PER_EPOCH: 80
 ```
 ### 2. Train a Model
@@ -90,7 +90,7 @@ Note) These tools are currently profiled for lung cancer maintype classification
 ## Results (Draft)
 
 ### 1. Performance of Resnet 34 with the WSI at 1x magnification
-We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the Resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.
+We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.
 ![image](https://user-images.githubusercontent.com/64822593/201547097-89a4b7f7-9218-4250-964d-1f564bb60266.png)
 
 ### 2. Performance of Resnet 50 with the WSI at 1x and 2x magnification
@@ -98,7 +98,7 @@ We then tried the training with the Resnet50, initialized by the weights obtaine
 
 ![image](https://user-images.githubusercontent.com/64822593/198936803-2a2fb8d3-d3b2-4009-b9d9-e54b24d96e79.png)
 
-To improve the accuracy, we tried the training with 2x images upon loading the model.h5 provided by the authors.  Although it was trained at 4x but utilized for our training at 2x.  The validation accuracy reached about 0.89 with the validation loss of 0.25 within 100 epochs, that was significantly increased from the initial training at 1x.  Out hardware spec. remained the same as for the 1x training (CPU RAM : 128 GB).
+To improve the accuracy, we tried the training with 2x images upon loading the model.h5 provided by the authors.  Although it was trained at 4x, it could be utilized for the training at 2x.  The validation accuracy reached about 0.89 with the validation loss of 0.25 within 100 epochs, that was significantly increased from the initial training at 1x.  Out hardware spec. remained the same as for the 1x training (CPU RAM : 128 GB).
 
 ![image](https://user-images.githubusercontent.com/64822593/201279646-b3c4170d-2cc1-4f87-b32d-6486e306f473.png)
 
@@ -254,7 +254,7 @@ Thus, it is NOT compatible with any models that can be selected in model.py.
 
 ### 7. Backbones of the model 
 
-In model.py, a dictionary variable called graph_mapping was defined as below.  'fixup_resnet50' and 'frozenbn_resnet50' were taking up the weights of the imagenet as initial weights.  The other two were not so their weights were initiated randomly.  
+In model.py, a dictionary variable called graph_mapping was defined as below.  'fixup_resnet50' and 'frozenbn_resnet50' were taking up the weights of the imagenet as initial weights.  The other two, 'resnet34' and 'fixup_resnet34', were initialized randomly.  
 
 graph_mapping = {
 
