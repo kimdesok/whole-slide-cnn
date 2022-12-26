@@ -54,22 +54,29 @@ Refer to poetry.lock under whole_slide_cnn folder for the full list.
 
 ## Methods
 ### 1. Datasets and Configurations
-The .csv files under data_configs folder were used as they were without any modification. A detailed description was available by the authors as in the Appendix below.  Hyperparameters were set up in a YAML file (config_wholeslide_2x.yaml) under train_configs folder.  
-In the YAML file, the parameters of RESIZE_RATIO and INPUT_SIZE were set appropriately to avoid the OOM error.  One example is shown below:
+The .csv files under data_configs folder were used without any modification. A detailed description was available by the authors as in the Appendix below.  Hyperparameters were set in a YAML file under train_configs folder.  In the YAML file, the parameters of RESIZE_RATIO, INPUT_SIZE, and  NUM_UPDATES_PER_EPOCH were set appropriately to avoid the OOM error at each magnification.  Some examples are shown below.
 ```
-RESIZE_RATIO: 0.05
-INPUT_SIZE: [5500, 5500, 3]
-NUM_UPDATES_PER_EPOCH: 80
+@1x training
+    RESIZE_RATIO: 0.05
+    INPUT_SIZE: [5500, 5500, 3]
+    NUM_UPDATES_PER_EPOCH: 80
+
+@2x training
+    RESIZE_RATIO: 0.1
+    INPUT_SIZE: [8000, 8000, 3]
+    
+@2x training with the previously trained model
+    LOAD_MODEL_BEFORE_TRAIN: True
 ```
 ### 2. Train a Model
 
 To train a model, the following script was run:
 ```
-python -m whole_slide_cnn.train --config config_wholeslide_2x.yaml [--continue_mode]
+python -m whole_slide_cnn.train --config config_wholeslide_1x.yaml [--continue_mode]
 ```
 , where `--continue_mode` is optional that makes the training process begin after loading the model weights.
 
-To enable multi-node, multi-GPU distributed training, simply add `mpirun` in front of the above command, e.g.
+To enable multi-node, multi-GPU distributed training, add `mpirun` in front of the above command, e.g.
 ```
 mpirun -np 4 -x CUDA_VISIBLE_DEVICES="0,1,2,3" python -m whole_slide_cnn.train --config config_wholeslide_2x.yaml
 ```
@@ -80,27 +87,36 @@ Note) You should be at the root folder of this repository when calling the above
 
 The model was evaluated by calling the command as below and optionally a prediction heatmap was also generated.
 ```
-python -m whole_slide_cnn.test --config config_wholeslide_2x.yaml
+python -m whole_slide_cnn.test --config config_wholeslide_1x.yaml
 ```
-This command generated a JSON file in the result directory named `test_result.json` by default.
+This command generated a JSON file named `test_result.json` by default in the result directory.
 The file contained the model predictions for each testing slide. To further generate the AUC values and their graphs, more tools were available, as explained in the Appendix.
 
-Note) These tools are currently profiled for lung cancer maintype classification and should be modified when applying to your own tasks.
+Note) These tools are currently profiled for lung cancer classification and should be modified when applying to your own tasks.
 
 ## Results (Draft)
 
 ### 1. Performance of Resnet 34 with the WSI at 1x magnification
-We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.
+We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.  The AUC was 0.8063 when the test dataset was evaluated with the model.
 ![image](https://user-images.githubusercontent.com/64822593/201547097-89a4b7f7-9218-4250-964d-1f564bb60266.png)
 
+![image](https://user-images.githubusercontent.com/64822593/209490657-9591d29d-89b4-4f8d-bf0e-5f21a1259795.png)
+<br>Receiver Operating Characteristic(ROC) Curves for LUAD and LUSC at 1x by Resnet 34 model<br>
+
 ### 2. Performance of Resnet 50 with the WSI at 1x and 2x magnification
-We then tried the training with the Resnet50, initialized by the weights obtained by training with Imagenet, at the same magnification. The validation accuracy reached about 0.80 with the validation loss of 0.41.
+We then tried the training with the Resnet50, initialized by the weights obtained by training with Imagenet, at the same magnification. The validation accuracy reached about 0.80 with the validation loss of 0.41.  The AUC was 0.8153 when the test dataset was evaluated with the model.
 
 ![image](https://user-images.githubusercontent.com/64822593/198936803-2a2fb8d3-d3b2-4009-b9d9-e54b24d96e79.png)
 
-To improve the accuracy, we tried the training with 2x images upon loading the model.h5 provided by the authors.  Although it was trained at 4x, it could be utilized for the training at 2x.  The validation accuracy reached about 0.89 with the validation loss of 0.25 within 100 epochs, that was significantly increased from the initial training at 1x.  Out hardware spec. remained the same as for the 1x training (CPU RAM : 128 GB).
+![image](https://user-images.githubusercontent.com/64822593/209491445-aef0041c-8802-4d63-a2ac-63398f461906.png)
+<br>Receiver Operating Characteristic(ROC) Curves for LUAD and LUSC at 1x by Resnet 50 model<br>
+
+
+To improve the accuracy, we tried the training with 2x images upon loading the model.h5 provided by the authors.  Although it was trained at 4x, it could be utilized for the training at 2x.  The validation accuracy reached about 0.89 with the validation loss of 0.25 within 100 epochs, that was significantly increased from the initial training at 1x.  Our hardware spec. remained the same as for the 1x training (CPU RAM : 128 GB).
 
 ![image](https://user-images.githubusercontent.com/64822593/201279646-b3c4170d-2cc1-4f87-b32d-6486e306f473.png)
+
+[ROC curves here]
 
 ### 3. Visualization of grad-CAM
 The model was evaluated visually by grad-CAM that depicts the likelihood of the tumor in the tissue(panel A in the figure). The image below highlights where the lung cancer cells are likely located in an LUAD case.  
