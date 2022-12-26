@@ -258,18 +258,19 @@ Validation results (*n* = 192) on `data_configs/pure_tcga/val_pure_tcga.csv` are
 
 <img src="https://user-images.githubusercontent.com/6285919/122541978-cd029800-d05c-11eb-932c-3cc0c517101e.png" width="400" />
 
+### Error occurred while loading the pretrained model
+
+The number of the layers of the provided model was different to the ones of Resnet 50 or Resnet 32. <br>
+It was compatible only with the 'frozenbn_resnet50' whereas the 'fixup_resnet50' also resulted in an error while initializing the model.
+In fact, the 'config_pure_tcga_wholeslide_4x.yaml' had the MODEL argument defined as 'frozenbn_resnet50'.
+
 ### 5. Data Availability
 
 The slide data supporting the cross-site generalization capability in this study are obtained from TCGA via the Genomic Data Commons Data Portal (https://gdc.cancer.gov).
 
 A dataset consists of several slides from TCGA-LUAD and TCGA-LUSC is suitable for testing our pipeline in small scale, with some proper modifications of configuration files described above.
 
-### 6. Error occurred when the pretrained model was loaded.
-
-The number of the layers of the provided model was different to the Resnet 50 or Resnet 32. <br>
-Thus, it is NOT compatible with any models that can be selected in model.py.
-
-### 7. Backbones of the model 
+### 6. Backbones of the model 
 
 In model.py, a dictionary variable called graph_mapping was defined as below.  'fixup_resnet50' and 'frozenbn_resnet50' were taking up the weights of the imagenet as initial weights.  The other two, 'resnet34' and 'fixup_resnet34', were initialized randomly.  
 
