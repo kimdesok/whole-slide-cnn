@@ -56,16 +56,18 @@ Refer to poetry.lock under whole_slide_cnn folder for the full list.
 ### 1. Datasets and Configurations
 The .csv files under data_configs folder were used without any modification. A detailed description was available by the authors as in the Appendix below.  Hyperparameters were set in a YAML file under train_configs folder.  In the YAML file, the parameters of RESIZE_RATIO, INPUT_SIZE, and  NUM_UPDATES_PER_EPOCH were set appropriately to avoid the OOM error at each magnification.  Some examples are shown below.
 ```
-@1x training
+#Training @1x
     RESIZE_RATIO: 0.05
     INPUT_SIZE: [5500, 5500, 3]
     NUM_UPDATES_PER_EPOCH: 80
 
-@2x training
+#Training @2x
     RESIZE_RATIO: 0.1
     INPUT_SIZE: [8000, 8000, 3]
     
-@2x training with the previously trained model
+In order to utilize the pretrained model provided by the authors, the LOAD_MODEL_BEFORE_TRAIN and MODEL argumens were reset as below:
+    
+#Training @2x with the model pretrained @ 4X
     LOAD_MODEL_BEFORE_TRAIN: True
     MODEL: "frozenbn_resnet50"    
 ```
