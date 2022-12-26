@@ -64,9 +64,11 @@ The .csv files under data_configs folder were used without any modification. A d
 #Training @2x
     RESIZE_RATIO: 0.1
     INPUT_SIZE: [8000, 8000, 3]
-    
+```
+
 In order to utilize the pretrained model provided by the authors, the LOAD_MODEL_BEFORE_TRAIN and MODEL argumens were reset as below:
     
+```
 #Training @2x with the model pretrained @ 4X
     LOAD_MODEL_BEFORE_TRAIN: True
     MODEL: "frozenbn_resnet50"    
