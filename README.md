@@ -1,6 +1,6 @@
 # Whole slide image (WSI) training CNN Pipeline
 
-### Short Introduction
+### Introduction
 The WSI is the digital image representing the entire histologic slide captured by a high-throughput scanner such as Leica's Aperio scanner.  The pixel size of a WSI is often larger than 100,000 by 100,000 reaching upto 10 GB. Each individual WSI can be easily labeled by using the corresponding clinical information readily available at the deposit site such as the NCI's GDC data portal, for example.
 
 It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high accuracy, the WSI input should be provided at least 5x or even higher, requiring a computing resource with an adequately large memory close to 512 GB, for example.
@@ -99,7 +99,7 @@ The file contained the model predictions for each testing slide. To further gene
 
 Note) These tools are currently profiled for lung cancer classification and should be modified when applying to your own tasks.
 
-## Results (Draft)
+## Results & Discussion (Draft)
 
 ### 1. Performance of Resnet 34 with the WSI at 1x magnification
 We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.  The AUC was 0.8063 when the test dataset was evaluated with the model.
@@ -136,12 +136,12 @@ Finally, the fourth image was generated using the Resnet model trained at the 2x
 ### 4. Problems encountered when the hardware requirement was not met
 The computing server consisted of an NVIDIA Quadro RTX 6000 GPU that had 24 GB memory capable of runnning at 14~16 TFlops in single precision.  The CPU memory was 128 GB.  
 
-Due to the memory requirement of the algorithm, only images at the magnification at the 2x were suitable for the training at the server.  Thus, higher resolution images at 5x or above could not be used for the training. 
+Due to the memory requirement of the training algorithm, only images at the magnification of 2x or lower were suitable for the training at the server.  Thus, higher resolution images at 4x or higher could not be used for the training. 
 
-When the magnification of the input images was 1x, the accuracy values were 0.68 and 0.80 for Resnet 34 and Resnet 50, respectively.  When the magnification was increased to 2x, the accuracy was increased to 0.89 in Resnet 50.  This suggested that the higher resolution of the input images helped to improve the performance. However, we could not improve the accuracy further due to the limitation of the memory in the server for the 4x images.
+When the magnification of the training images was 1x, the accuracy was 0.80 for Resnet 50, respectively.  When the magnification was increased to 2x, the accuracy was also increased to 0.89.  This suggested that even higher resolution of the training images should help to improve the accuracy. For trying out the 4x images, for example, the memory in the server is believed to be at least 512 GB.  The memory requirement depends on the size of training images and the batch.
 
 ### 5. Computing time
-The computing time at the 1x was about 4.3 sec per batch and the batch was set to 80.  Total computing time was 115 mins when the number of the total batch for the training of ResNet50 was 1,600.  The computing time at the 2x was about 46 sec per batch.  Total computing time was about 102 hours when the number of the batch to process was 8,000.
+The computing time at 1x was about 4.3 sec per batch and the size of batch was set to 80.  Total computing time was 115 mins when the number of the total batch for the training of ResNet50 was 1,600.  The computing time at 2x was about 46 sec per batch.  Total computing time was about 102 hours when the number of the batch to process was 8,000.
 
 ## Acknowledgement
 The computing server was kindly provided by the National Internet Promotion Agency(NIPA) of south Korea.
@@ -153,8 +153,7 @@ The computing server was kindly provided by the National Internet Promotion Agen
 [2] Wen-Yu Chuang, Chi-Chung Chen, Wei-Hsiang Yu, Chi-Ju Yeh, Shang-Hung Chang, Shir-Hwa Ueng, Tong-Hong Wang, Chuen Hsueh, Chang-Fu Kuo & Chao-Yuan Yeh$ Identification of nodal micrometastasis in colorectal cancer using deep learning on annotation-free whole-slide images. *Mod Pathol* (2021). https://doi.org/10.1038/s41379-021-00838-2
 
 ## Appendix
-mostly taken from the original README.MD and 
-some more stuffs learning while trying this and that...
+Mostly taken from the original README.MD and some additional stuffs worth of mentioning were added.
 
 ## License
 
@@ -249,11 +248,11 @@ See the following table for the usage of each tool.
 
 A pre-trained weight was obtained from https://drive.google.com/file/d/1XuONWICAzJ-cUKjC7uHLS0YLJhbLRoo1/view?usp=sharing kindly provided by the authors.
 
-The model was trained by TCGA-LUAD and TCGA-LUSC diagnostic slides specified in `data_configs/pure_tcga/train_pure_tcga.csv` using the config `train_configs/pure_tcga/config_pure_tcga_wholeslide_4x.yaml`.
+The model was trained by TCGA-LUAD and TCGA-LUSC diagnostic slides specified in `data_configs/pure_tcga/train_pure_tcga.csv` using the configuration file, `train_configs/pure_tcga/config_pure_tcga_wholeslide_4x.yaml`.
 
 Since no normal lung slides were provided in these data sets, the model predicts a slide as either adenocarcinoma (class_id=1) or squamous cell carcinoma (class_id=2).
 
-The prediction scores for normal (class_id=0) should be ignored.
+Thus, the prediction scores for normal (class_id=0) should be ignored.
 
 Validation results (*n* = 192) on `data_configs/pure_tcga/val_pure_tcga.csv` are listed as follow.
 
@@ -265,18 +264,18 @@ Validation results (*n* = 192) on `data_configs/pure_tcga/val_pure_tcga.csv` are
 ### Error occurred while loading the pretrained model
 
 The number of the layers of the provided model was different to the ones of Resnet 50 or Resnet 32. <br>
-It was compatible only with the 'frozenbn_resnet50' whereas the 'fixup_resnet50' also resulted in an error while initializing the model.
+It was compatible only with the 'frozenbn_resnet50', whereas the 'fixup_resnet50' also resulted in an error while initializing the model.
 In fact, the 'config_pure_tcga_wholeslide_4x.yaml' had the MODEL argument defined as 'frozenbn_resnet50'.
 
 ### 5. Data Availability
 
 The slide data supporting the cross-site generalization capability in this study are obtained from TCGA via the Genomic Data Commons Data Portal (https://gdc.cancer.gov).
 
-A dataset consists of several slides from TCGA-LUAD and TCGA-LUSC is suitable for testing our pipeline in small scale, with some proper modifications of configuration files described above.
+A dataset consists of several hundred slides from TCGA-LUAD and TCGA-LUSC is suitable for testing our pipeline in small scale, with some proper modifications of configuration files described above.
 
 ### 6. Backbones of the model 
 
-In model.py, a dictionary variable called graph_mapping was defined as below.  'fixup_resnet50' and 'frozenbn_resnet50' were taking up the weights of the imagenet as initial weights.  The other two, 'resnet34' and 'fixup_resnet34', were initialized randomly.  
+In model.py, a dictionary variable called graph_mapping was defined as below.  The model types, 'fixup_resnet50' and 'frozenbn_resnet50', were initialized with the imagenet as weights.  The other two, 'resnet34' and 'fixup_resnet34', were initialized randomly.  
 
 graph_mapping = {
 
