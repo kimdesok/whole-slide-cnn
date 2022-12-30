@@ -137,7 +137,7 @@ The computing server consisted of an NVIDIA Quadro RTX 6000 GPU that had 24 GB m
 
 Due to the memory requirement of the training algorithm, only images at the magnification of 2x or lower were suitable for the training at the server.  Thus, higher resolution images at 4x or higher could not be used for the training. 
 
-When the magnification of the training images was 1x, the accuracy was 0.80 for Resnet 50, respectively.  When the magnification was increased to 2x, the accuracy was also increased to 0.89.  This suggested that even higher resolution of the training images should help to improve the accuracy. For trying out the 4x images, for example, the memory in the server is believed to be at least 512 GB.  The memory requirement depends on the size of training images and the batch.
+When the magnification of the training images was 1x, the accuracy was 0.80 for Resnet 50.  When the magnification was increased to 2x, the accuracy was also increased to 0.89(data not shown).  This suggested that the training images with higher resolution should improve the accuracy further. For trying out the 4x images, for example, the memory size is expected to be larger than 512 GB to accomodate the deep layers of Resnet 50, the batch of 100 WSIs, and the image of 22,000 x 22,000 pixels or larger, while avoiding the OOM error.
 
 ### 5. Computing time
 The computing time at 1x was about 4.3 sec per batch and the size of batch was set to 80.  Total computing time was 115 mins when the number of the total batch for the training of ResNet50 was 1,600.  The computing time at 2x was about 46 sec per batch.  Total computing time was about 102 hours when the number of the batch to process was 8,000.
