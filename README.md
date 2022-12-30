@@ -3,14 +3,14 @@
 ### Introduction
 The WSI is the digital image representing the entire histologic slide captured by a high-throughput scanner such as Leica's Aperio scanner.  The pixel size of a WSI is often larger than 100,000 by 100,000 reaching upto 10 GB. Each individual WSI can be easily labeled by using the corresponding clinical information readily available at the deposit site such as the NCI's GDC data portal, for example.
 
-It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high accuracy, the WSI input should be provided at least 5x or even higher, requiring a computing resource with an adequately large memory close to 512 GB, for example.
+It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high accuracy, the WSI input should be provided at least 4x or even higher, requiring a computing resource with an adequately large memory close to 512 GB, for example.
 
 ![image](https://user-images.githubusercontent.com/64822593/208895067-51db8300-c49d-489a-b19a-d90a16bfc849.png)
 <p align="center">
 Whole Slide Image(WSI) is a tiled TIFF.  Captured from TCGA-49-4494-01Z-00-DX5.1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f.svs
 </p> 
 
-The computing resource even with multiple GPUs often lacks this much memory and ends up with the out of memory(OOM) error.  To solve this problem, IBM developed Large Model Support(LMS) that takes a user-defined computational graph and swaps tensors from GPUs to the host memory and vice versa [For more, see (https://www.ibm.com/docs/en/wmlce/1.6.0?topic=gsmf-getting-started-tensorflow-large-model-support-tflms-v2)].  
+The computing resource even with multiple GPUs often lacks this much memory and ends up with the out of memory(OOM) error.  To solve this problem, IBM developed Large Model Support(LMS) that takes a user-defined computational graph and swaps tensors from GPUs to the host memory and vice versa (For more information, visit https://www.ibm.com/docs/en/wmlce/1.6.0?topic=gsmf-getting-started-tensorflow-large-model-support-tflms-v2).  
 
 The authors who set up this depository originally had also developed a huge model support(HMS) function, probably similar to the IBM's LMS in a nutshell [1][2].  The scripts provided by the authors let us to reproduce their results by WSI input DL training, inference, visualization, and statistics calculation, etc[1].
 
@@ -24,19 +24,18 @@ The exactly same pipeline should be utilized to other human cancers such as pros
 
 The computing resource should provide an adequate amount of main memory space (minimal: 256 GB, recommended: 512 GB) to prevent out-of-memory(OOM) error and fully explore the utility of the huge memory support(HMS) function.  
 
-However, a trial training could be performed by adjusting the resizing ratio at 0.05 and the size of an input image to 5000 x 5000, for example, in the configuration file(0.1 and 11000 x 11000 also worked for the server with 128 GB memory).  It would result in the lower accuracy values ranging from 80 to 90%.
+However, a trial training could be performed by reducing the size of the WSI training image, the size of batch, and the complexity of the model basically.  However, it would result in the lower accuracy values ranging from 80 to 90%.  For the specific setup, please refer to the method section below.
 
 ### Packages
 
 The codes were tested on the environment with Ubuntu 18.04, Python 3.7.3, cuda 10.0, cudnn 7.6 and Open MPI 4.0.1.
 
-More specifically, a set of CUDA related stuffs compatible with tensorflow version 1.15 were installed as below
+More specifically, a set of CUDA related libraries compatible with Tensorflow version 1.15.5 should be installed as below
 ```
 conda install cudatoolkit=10.0
-
 conda install cudnn=7.6.5
 ```
-Python packages were installed before running the scripts, including
+Python packages were installed via a dependency management and packaging tool, poetry.  Some of packages include:
 
 - Tensorflow v1.x (tensorflow-gpu==1.15.3)
 - Horovod (horovod==0.19.0)
@@ -44,13 +43,13 @@ Python packages were installed before running the scripts, including
 - OpenSlide 3.4.1 (https://github.com/openslide/openslide/releases/tag/v3.4.1)
 - OpenSlide Python (openslide-python=1.1.1)
 - (optional) R 4.0.2 (https://www.r-project.org/)
-- Tensorflow Huge Model Support (our package)
+- Tensorflow Huge Model Support (package provided in the author's repository called 'tensorflow-huge-memory-support')
 
-The above packages were installed under the folder tensorflow-huge-model-support by running the command shown below.
+The above packages were installed by running the command shown below.
 ```
 pip install .
 ```
-Refer to poetry.lock under whole_slide_cnn folder for the full list.
+Refer to poetry.lock under whole_slide_cnn folder for the full list of dependencies.
 
 ## Methods
 ### 1. Datasets and Configurations
