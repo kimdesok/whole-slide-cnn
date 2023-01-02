@@ -18,7 +18,11 @@ The authors who set up this repository originally had also developed a huge mode
 
 Once this pipeline is explored for lung cancer datasets, it is believed to be utilized to other important human cancers such as prostate cancers or breast cancers by simply creating new configuration files (and label files in addition which is a piece of cake).
 
-Thus, here lies the purpose of reproducing the original works of the authors: We can learn about software & hardware requirements for the application of the pipeline to other cancers.  In addition, we can identify numerous tasks that would enable us to apply this sort of the DL pipeline to the real world problems.
+Thus, here lies the purpose of reproducing the original works of the authors: We can learn about software & hardware requirements for the application of the pipeline to other cancers.  In addition, we can identify numerous tasks that would enable us to apply this sort of the DL pipeline to the real world problems.  
+
+List of tasks:
+1. Migration to TF2.
+2. Reducing the hardware requirement (or find out how to increase the computing speed). 
 
 ## Requirements
 
