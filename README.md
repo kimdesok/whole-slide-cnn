@@ -1,22 +1,24 @@
 # Whole slide image (WSI) training CNN Pipeline
 
 ### Introduction
-The WSI is the digital image representing the entire histologic slide captured by a high-throughput scanner such as Leica's Aperio scanner.  The pixel size of a WSI is often larger than 100,000 by 100,000 reaching upto 10 GB. Each individual WSI can be easily labeled by using the corresponding clinical information readily available at the deposit site such as the NCI's GDC data portal, for example.
-
-It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high accuracy, the WSI input should be provided at least 4x or even higher, requiring a computing resource with an adequately large memory close to 512 GB, for example.
+The whole slide image(WSI) is the digital image representing the entire histologic slide captured by a high-throughput digital scanner such as Leica's Aperio scanner.  The image size of a WSI is often larger than 100,000 by 100,000 pixels reaching upto 10 GB. Each individual WSI can be easily labeled according to the corresponding clinical information readily available at the data deposit site such as the NCI's GDC data portal, for example.
 
 ![image](https://user-images.githubusercontent.com/64822593/208895067-51db8300-c49d-489a-b19a-d90a16bfc849.png)
 <p align="center">
 Whole Slide Image(WSI) is a tiled TIFF.  Captured from TCGA-49-4494-01Z-00-DX5.1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f.svs
 </p> 
 
-The computing resource even with multiple GPUs often lacks this much memory and ends up with the out of memory(OOM) error.  To solve this problem, IBM developed Large Model Support(LMS) that takes a user-defined computational graph and swaps tensors from GPUs to the host memory and vice versa (For more information, visit https://www.ibm.com/docs/en/wmlce/1.6.0?topic=gsmf-getting-started-tensorflow-large-model-support-tflms-v2).  
+It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high classification accuracy, the magnification of WSI images should be at least 4x[1].  This requirement, in turn, limits the use of a computing resource with the memory smaller than 512 GB, for example.
 
-The authors who set up this depository originally had also developed a huge model support(HMS) function, probably similar to the IBM's LMS in a nutshell [1][2].  The scripts provided by the authors let us to reproduce their results by WSI input DL training, inference, visualization, and statistics calculation, etc[1].
+The computing resource even with multiple GPUs often lacks this much memory and ends up with the out of memory(OOM) error while training.  To solve this problem, IBM developed Large Model Support(LMS) that takes a user-defined computational graph and swaps tensors from GPUs to the host memory and vice versa (For more information, visit https://www.ibm.com/docs/en/wmlce/1.6.0?topic=gsmf-getting-started-tensorflow-large-model-support-tflms-v2).  
 
-The exactly same pipeline should be utilized to other human cancers such as prostate cancers or breast cancers by simply creating new configuration files (and label files in addition which is a piece of cake).
+The authors who set up this repository originally had also developed a huge model support(HMS) package, probably similar to the IBM's LMS in a nutshell [1][2].  The scripts provided by the authors let us to reproduce their results by WSI dataset preparation, DL training, inference, visualization, and statistics calculation, etc [1] (See the figure below).
 
 ![image](https://user-images.githubusercontent.com/64822593/208655851-6986f3e5-84c0-46ab-9194-b35887bf83a0.png)
+
+Once this pipeline is explored for lung cancer datasets, it is believed to be utilized to other important human cancers such as prostate cancers or breast cancers by simply creating new configuration files (and label files in addition which is a piece of cake).
+
+Thus, here lies the purpose of reproducing the original works of the authors: We can learn about software & hardware requirements for the application of the pipeline to other cancers.  In addition, we can identify numerous tasks that would enable us to apply this sort of the DL pipeline to the real world problems.
 
 ## Requirements
 
