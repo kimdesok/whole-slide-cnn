@@ -45,12 +45,6 @@ Python packages were installed via a dependency management and packaging tool, p
 - (optional) R 4.0.2 (https://www.r-project.org/)
 - Tensorflow Huge Model Support (package provided in the author's repository called 'tensorflow-huge-memory-support')
 
-The above packages were installed by running the command shown below.
-```
-pip install .
-```
-Refer to poetry.lock under whole_slide_cnn folder for the full list of dependencies.
-
 ## Methods
 ### 1. Datasets and Configurations
 The .csv files under data_configs folder were used without any modification. A detailed description was available by the authors as in the Appendix below.  Hyperparameters were set in a YAML file under train_configs folder.  In the YAML file, the parameters of RESIZE_RATIO, INPUT_SIZE, and  NUM_UPDATES_PER_EPOCH were set appropriately to avoid the OOM error at each magnification.  Some examples are shown below.
@@ -62,7 +56,7 @@ The .csv files under data_configs folder were used without any modification. A d
 
 #Training @2x
     RESIZE_RATIO: 0.1
-    INPUT_SIZE: [8000, 8000, 3]
+    INPUT_SIZE: [10000, 10000, 3]
 ```
 
 In order to utilize the pretrained model provided by the authors, the LOAD_MODEL_BEFORE_TRAIN and MODEL argumens were reset as below:
