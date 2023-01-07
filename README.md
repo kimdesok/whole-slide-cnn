@@ -101,27 +101,32 @@ Note) These tools are currently profiled for lung cancer classification and shou
 ## Results & Discussion (Draft)
 
 ### 1. Performance of Resnet 34 with the WSI at 1x magnification
-We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.  The AUC was 0.8063 when the test dataset was evaluated with the model.
+We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.  The test result is not shown (no data).
 ![image](https://user-images.githubusercontent.com/64822593/201547097-89a4b7f7-9218-4250-964d-1f564bb60266.png)
 
-![image](https://user-images.githubusercontent.com/64822593/209490657-9591d29d-89b4-4f8d-bf0e-5f21a1259795.png)
-<br>Receiver Operating Characteristic(ROC) Curves for LUAD and LUSC at 1x by Resnet 34 model<br>
-
 ### 2. Performance of Resnet 50 with the WSI at 1x and 2x magnification
-We then tried the training with the Resnet50, that would show the effect of increasing the complexity of the model. The ResNet50 model was initialized by the weights of the pretrained Imagenet model. The validation accuracy reached about 0.80 with the validation loss of 0.41.  The AUC slightly increased to 0.8153.
+We then tried the training with the Resnet50, that would show the effect of increasing the complexity of the model. The ResNet50 model was initialized by the weights of the pretrained Imagenet model. The validation accuracy reached about 0.80 with the validation loss of 0.41.  The AUC was 0.8063 when the test dataset was evaluated with the model. 
 
 ![image](https://user-images.githubusercontent.com/64822593/198936803-2a2fb8d3-d3b2-4009-b9d9-e54b24d96e79.png)
 
-![image](https://user-images.githubusercontent.com/64822593/209491445-aef0041c-8802-4d63-a2ac-63398f461906.png)
+![image](https://user-images.githubusercontent.com/64822593/209490657-9591d29d-89b4-4f8d-bf0e-5f21a1259795.png)
 <br>Receiver Operating Characteristic(ROC) Curves for LUAD and LUSC at 1x by Resnet 50 model<br>
 
-To further improve the accuracy, we tried the training with 2x images upon loading the model.h5 provided by the authors.  Although it was trained at 4x, it could be utilized for the training at 2x.  The validation accuracy reached about 0.89 with the validation loss of 0.25 within 100 epochs, that was significantly increased from the previous training at 1x.  Our hardware spec. remained the same as for the 1x training (CPU RAM : 128 GB). [
+To further improve the accuracy, we tried the training with 2x images.  The AUC slightly increased to 0.8261.
+
+![image](https://user-images.githubusercontent.com/64822593/211115004-cc7fdb16-2029-4c0a-8239-d32afd1c199a.png)
+<br>Receiver Operating Characteristic(ROC) Curves for LUAD and LUSC at 2x by Resnet 50 model<br>
+
+### 3. Performance of Resnet 50 with the WSI at 2x magnification with the model pretrained at 4x
+
+Although the model provided by the authors was trained at 4x, it could be utilized for the training at 2x.  The validation accuracy reached about 0.89 with the validation loss of 0.25 upon completing 100 epochs.  The AUC also dramatically increased to 0.9731, 17.9% boost compared the previous training at 2x without the 4x pretrained model.  Our hardware spec. remained the same as for the 1x training (CPU RAM : 128 GB).
 
 ![image](https://user-images.githubusercontent.com/64822593/201279646-b3c4170d-2cc1-4f87-b32d-6486e306f473.png)
 
-[ROC curves not generated. The training is being redone to reproduce the previously obtained validation accuracy.]
+![image](https://user-images.githubusercontent.com/64822593/211124003-166dd949-94b4-4f32-9c02-3bc8452383e7.png)
+<br>Receiver Operating Characteristic(ROC) Curves for LUAD and LUSC at 2x by Resnet 50 model initialized by the model pretrained at 4x<br>
 
-### 3. Visualization of grad-CAM
+### 4. Visualization of grad-CAM
 The model was evaluated visually by grad-CAM that depicts the likelihood of the tumor in the tissue(panel A in the figure). The image below highlights where the lung cancer cells are likely located in an LUAD case.  
 
 The second image was generated using the ResNet50 model trained at the 1x magnification from the weights of Imagenet and shows somewhat large tissue area of false positive(panel B).  
@@ -131,18 +136,18 @@ The third image was generated using the Resnet model trained at the same magnifi
 Finally, the fourth image was generated using the Resnet model trained at the 2x in the continous mode and seems to show much larger marking area of the tumor tissue(panel D).  At the moment, the marking has not been validated by an expert.
 ![image](https://user-images.githubusercontent.com/64822593/201546476-51062b10-2bd1-4e96-a929-65078ae32f0b.png)
 
-### 4. Problems encountered when the hardware requirement was not met
+### 5. Problems encountered when the hardware requirement was not met
 The computing server consisted of an NVIDIA Quadro RTX 6000 GPU that had 24 GB memory capable of runnning at 14~16 TFlops in single precision.  The CPU memory was 128 GB.  
 
 Due to the memory requirement of the training algorithm, only images at the magnification of 2x or lower were suitable for the training at the server.  Thus, higher resolution images at 4x or higher could not be used for the training. 
 
 When the magnification of the training images was 1x, the accuracy was 0.80 for Resnet 50.  When the magnification was increased to 2x, the accuracy was also increased to 0.89(data not shown).  This suggested that the training images with higher resolution should improve the accuracy further. For trying out the 4x images, for example, the memory size is expected to be larger than 512 GB to accomodate the deep layers of Resnet 50, the batch of 100 WSIs, and the image of 22,000 x 22,000 pixels or larger, while avoiding the OOM error.
 
-### 5. Computing time
+### 6. Computing time
 The computing time at 1x was about 4.3 sec per batch and the size of batch was set to 80.  Total computing time was 115 mins when the number of the total batch for the training of ResNet50 was 1,600.  The computing time at 2x was about 46 sec per batch.  Total computing time was about 102 hours when the number of the batch to process was 8,000.
 
 ## Acknowledgement
-The computing server was kindly provided by the National Internet Promotion Agency(NIPA) of south Korea.
+The computing server was kindly provided by the National Internet Promotion Agency(NIPA) of s. Korea.
 
 ## References
 
