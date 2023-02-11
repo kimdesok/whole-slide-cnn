@@ -34,22 +34,28 @@ However, a trial training could be performed by reducing the size of the WSI tra
 
 ### Packages
 
-The codes were tested on the environment with Ubuntu 18.04, Python 3.7.3, cuda 10.0, cudnn 7.6 and Open MPI 4.0.1.
+The codes were tested in the environment with Ubuntu 18.04, Python 3.7.3, cuda 10.0, cudnn 7.6 and Open MPI 4.0.1.
 
 More specifically, a set of CUDA related libraries compatible with Tensorflow version 1.15.5 should be installed as below
 ```
 conda install cudatoolkit=10.0
 conda install cudnn=7.6.5
 ```
-Python packages were installed via a dependency management and packaging tool, poetry.  Some of packages include:
 
-- Tensorflow v1.x (tensorflow-gpu==1.15.3)
+Python packages were installed via a dependency management and packaging tool, poetry.  
+```
+poetry install
+```
+Some of packages include: 
+- Tensorflow v1.x (tensorflow-gpu==1.15.5)
 - Horovod (horovod==0.19.0)
 - MPI for Python (mpi4py==3.0.3)
 - OpenSlide 3.4.1 (https://github.com/openslide/openslide/releases/tag/v3.4.1)
 - OpenSlide Python (openslide-python=1.1.1)
 - (optional) R 4.0.2 (https://www.r-project.org/)
-- Tensorflow Huge Model Support (package provided in the author's repository called 'tensorflow-huge-memory-support')
+- Tensorflow Huge Model Support (package provided in the author's repository called 'tensorflow-huge-memory-support') <br>
+
+For a full list, see poetry.lock in the same folder.
 
 ## Methods
 ### 1. Datasets and Configurations
@@ -98,7 +104,7 @@ The file contained the model predictions for each testing slide. To further gene
 
 Note) These tools are currently profiled for lung cancer classification and should be modified when applying to your own tasks.
 
-## Results & Discussion (Draft)
+## Results & Discussion
 
 ### 1. Performance of Resnet 34 with the WSI at 1x magnification
 We first tried the training with the Resnet34, initialized by the weights obtained by training with Imagenet.  The image size was set to be at 5500 x 5500 with the resize factor of 0.05, representing the magnification at 1x.  The loss and accuracy curves were plotted upon training the model through 100 epochs.  The validation accuracy reached about 0.68 with the validation loss of 0.64.  The test result is not shown (no data).
@@ -158,7 +164,7 @@ The computing server was kindly provided by the National Internet Promotion Agen
 ## Appendix
 Mostly taken from the original README.MD and some additional stuffs worth of mentioning were added.
 
-## License
+### License
 
 Copyright (C) 2021 aetherAI Co., Ltd.
 All rights reserved.
@@ -264,7 +270,7 @@ Validation results (*n* = 192) on `data_configs/pure_tcga/val_pure_tcga.csv` are
 
 <img src="https://user-images.githubusercontent.com/6285919/122541978-cd029800-d05c-11eb-932c-3cc0c517101e.png" width="400" />
 
-### Error occurred while loading the pretrained model
+#### (Note) Error in loading the pretrained model
 
 The number of the layers of the provided model was different to the ones of Resnet 50 or Resnet 32. <br>
 It was compatible only with the 'frozenbn_resnet50', whereas the 'fixup_resnet50' also resulted in an error while initializing the model.
