@@ -3,10 +3,10 @@
 ### Introduction
 The whole slide image(WSI) is the digital image representing the entire histologic slide captured by a high-throughput digital scanner such as Leica's Aperio scanner.  The image size of a WSI is often larger than 100,000 by 100,000 pixels reaching upto 10 GB. Each individual WSI can be easily labeled according to the corresponding clinical information readily available at the data deposit site such as the NCI's GDC data portal, for example.
 
-![image](https://user-images.githubusercontent.com/64822593/208895067-51db8300-c49d-489a-b19a-d90a16bfc849.png)
-<p align="center">
-Whole Slide Image(WSI) is a tiled TIFF.  Captured from TCGA-49-4494-01Z-00-DX5.1e9e22d6-a4c9-40d1-aedb-b6cd404fe16f.svs
-</p> 
+| ![image](https://user-images.githubusercontent.com/64822593/218235019-81fd8cbe-00ce-482c-8d32-4d926ae80e2e.png) |
+|:--:| 
+| *Whole Slide Image(WSI) is basically a tiled TIFF.  The size is 19,442 by 39,089 with three color channels, equivalent to 2.3GB.* |
+
 
 It is widely known that training a deep neural network with a large WSI dataset is more practical since it does not require a time consuming pixel level annotation. However, to achieve a high classification accuracy, the magnification of WSI images should be at least 4x[1].  This requirement, in turn, limits the use of a computing resource with the memory smaller than 512 GB, for example.
 
