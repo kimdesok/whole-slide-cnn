@@ -84,14 +84,24 @@ To train a model, the following script was run:
 ```
 python -m whole_slide_cnn.train --config config_wholeslide_1x.yaml [--continue_mode]
 ```
-, where `--continue_mode` is optional that makes the training process begin after loading the model weights.
+where `--continue_mode` is optional that makes the training process begin after loading the model weights.
 
 To enable multi-node, multi-GPU distributed training, add `mpirun` in front of the above command, e.g.
 ```
-mpirun -np 4 -x CUDA_VISIBLE_DEVICES="0,1,2,3" python -m whole_slide_cnn.train --config config_wholeslide_2x.yaml
+[export CUDA_VISIBLE_DEVICES="0,1,2,3";]mpirun -np 4 python -m whole_slide_cnn.train --config config_wholeslide_2x.yaml
 ```
 
-Note) You should be at the root folder of this repository when calling the above commands.
+Note) 
+1) Explicit export command was not required to activate all the GPUs that the node has.  You may selectively activate the GPUs for the job but somehow it resulted in unknown errors (no error notice but the program just stopped).  
+2) At the first run, 2x input images have been successfully trained but images with higher resolutions such as 4x were resulted in the OOM errors.  Note that the current node consists of four Tesla T4 GPUs with 64 GB memory and extra 350 GB in the server utilized by adopting the UM technique that the authors developed.  
+3) At the moment, resnet-34 was chosen as the model and the magnification was being adjusted at 3x to avoid the OOM error(resize ratio of 0.15).  The input image size was set at (10000,10000,3). This setting occasionally produce a deadlock among GPUs.  No solutions at the moment.  
+
+```
+[2023-02-20 15:42:31.168674: W horovod/common/stall_inspector.cc:105] One or more tensors were submitted to be reduced, gathered or broadcasted 
+by subset of ranks and are waiting for remainder of ranks for more than 60 seconds. 
+This may indicate that different ranks are trying to submit different tensors or that only subset of ranks is submitting tensors, 
+which will cause deadlock. 
+```
 
 ### 3. Evaluate the Model
 
