@@ -155,9 +155,13 @@ Finally, the fourth image was generated using the Resnet model trained at the 2x
 ### 5. Problems encountered when the hardware requirement was not met
 The computing server consisted of an NVIDIA Quadro RTX 6000 GPU that had 24 GB memory capable of runnning at 14~16 TFlops in single precision.  The CPU memory was 128 GB.  
 
-Due to the memory requirement of the training algorithm, only images at the magnification of 2x or lower were suitable for the training at the server.  Thus, higher resolution images at 4x or higher could not be used for the training. 
+Due to the memory requirement of the training algorithm, only images at the magnification of 2x or lower were suitable for the training at the server.  Thus, the images with the magnification higher than 2x could not be used for the training. 
 
-When the magnification of the training images was 1x, the accuracy was 0.80 for Resnet 50.  When the magnification was increased to 2x, the accuracy was also increased to 0.89(data not shown).  This suggested that the training images with higher resolution should improve the accuracy further. For trying out the 4x images, for example, the memory size is expected to be larger than 512 GB to accomodate the deep layers of Resnet 50, the batch of 100 WSIs, and the image of 22,000 x 22,000 pixels or larger, while avoiding the OOM error.
+When the magnification of the training images was 1x, the accuracy was 0.8063 for the Resnet 50 model.  When the magnification was increased to 2x, the accuracy was also increased to 0.8261(See the figure above).  This suggested that the training images of higher magnification should improve the accuracy further. 
+
+For trying it out with the 4x images, for example, the memory size is expected to be larger than 512 GB to accomodate the deep layers of the Resnet 50, the batch of 1, and the image of 22,000 x 22,000 pixels or larger, while avoiding the OOM error according to the authors.  Without manipulating the CPU memory and floating point operations, the memory requirement reaches up to 892 GB due the huge size of feature variables in the Resnet 50 model while the parameters in the model takes about 0.1 GB (obtained from Calc_GPU_memory_requirement.ipynb, Author: Dr. Sreenivas Bhattiprolu).
+
+When this algorithm was executed in a high computing resource with many GPUs but with small memory, for example, four GPUs with each 16 GB memory, the Resnet 50 model causes a GPU stall.  The input image size was set at (10000, 10000, 3) for the 2x magnification.  For this setting, the memory requirement was 276 GB.  Since the server memory size was 390 GB and the total memory reached 454 GB, the Resnet 50 model was thought to be working without a problem.   
 
 ### 6. Computing time
 The computing time at 1x was about 4.3 sec per batch and the size of batch was set to 80.  Total computing time was 115 mins when the number of the total batch for the training of ResNet50 was 1,600.  The computing time at 2x was about 46 sec per batch.  Total computing time was about 102 hours when the number of the batch to process was 8,000.
