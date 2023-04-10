@@ -59,7 +59,17 @@ For a full list, see poetry.lock in the same folder.
 
 ## Methods
 ### 1. Datasets and Configurations
-The .csv files under data_configs folder were used without any modification. A detailed description was available by the authors as in the Appendix below.  Hyperparameters were set in a YAML file under train_configs folder.  In the YAML file, the parameters of RESIZE_RATIO, INPUT_SIZE, and  NUM_UPDATES_PER_EPOCH were set appropriately to avoid the OOM error at each magnification.  Some examples are shown below.
+The dataset consists of WSIs reresenting LUAD(Lung adenocarcinoma) and LUSC(Lung squamous cell carcinoma).  
+These WSIs were downloaded from GDC's TCGA-PRAD roject (See detailed method on how to download WSIs here).
+Train, validation, and test sets were divided by the ratio of 7:1.5:1.5, resectively.
+
+The .csv files under data_configs folder were used without any modification. 
+A detailed description was available by the authors as in the Appendix below.  
+
+Hyperparameters were set in a YAML file under train_configs folder.  
+In the YAML file, the parameters of RESIZE_RATIO, INPUT_SIZE, and  NUM_UPDATES_PER_EPOCH were set appropriately to avoid the OOM error at each magnification.  
+
+Some examples are shown below.
 ```
 #Training @1x
     RESIZE_RATIO: 0.05
@@ -88,7 +98,7 @@ where `--continue_mode` is optional that makes the training process begin after 
 
 To enable multi-node, multi-GPU distributed training, add `mpirun` in front of the above command, e.g.
 ```
-[export CUDA_VISIBLE_DEVICES="0,1,2,3";]mpirun -np 4 python -m whole_slide_cnn.train --config config_wholeslide_2x.yaml
+[CUDA_VISIBLE_DEVICES="0,1,2,3";]mpirun -np 4 python -m whole_slide_cnn.train --config config_wholeslide_2x.yaml
 ```
 
 Note) 
