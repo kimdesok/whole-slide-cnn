@@ -60,8 +60,8 @@ For a full list, see poetry.lock in the same folder.
 ## Methods
 ### 1. Datasets and Configurations
 The dataset consists of WSIs reresenting LUAD(Lung adenocarcinoma) and LUSC(Lung squamous cell carcinoma).  
-These WSIs were downloaded from GDC's TCGA-PRAD roject (See detailed method on how to download WSIs here).
-Train, validation, and test sets were divided by the ratio of 7:1.5:1.5, resectively.
+These WSIs were downloaded from GDC's TCGA-PRAD project (See detailed method on how to download WSIs [here](https://andrewjanowczyk.com/download-tcga-digital-pathology-images-ffpe/).  
+Train, validation, and test sets were divided by the ratio of 7:1.5:1.5, respectively.
 
 The .csv files under data_configs folder were used without any modification. 
 A detailed description was available by the authors as in the Appendix below.  
@@ -104,7 +104,7 @@ To enable multi-node, multi-GPU distributed training, add `mpirun` in front of t
 Note) 
 1) Explicit export command was not required to activate all the GPUs that the node has.  You may selectively activate the GPUs for the job but somehow it resulted in unknown errors (no error notice but the program just stopped).  
 2) At the first run, 2x input images have been successfully trained but images with higher resolutions such as 4x were resulted in the OOM errors.  Note that the current node consists of four Tesla T4 GPUs with 64 GB memory and extra 350 GB in the server utilized by adopting the UM technique that the authors developed.  
-3) At the moment, resnet-34 was chosen as the model and the magnification was being adjusted at 3x to avoid the OOM error(resize ratio of 0.15).  The input image size was set at (10000,10000,3). This setting occasionally produce a deadlock among GPUs.  No solutions at the moment.  
+3) At the moment, resnet-34 was chosen as the model and the magnification was being adjusted at 3x to avoid the OOM error(resize ratio of 0.15).  The input image size was set at (10000,10000,3). This setting occasionally produce a deadlock among GPUs.  No solutions are available at the moment.  
 
 ```
 [2023-02-20 15:42:31.168674: W horovod/common/stall_inspector.cc:105] One or more tensors were submitted to be reduced, gathered or broadcasted 
